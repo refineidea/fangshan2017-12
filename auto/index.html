@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <title>房山区动景展播</title>
+	    <meta name="viewport" content="target-densitydpi=device-dpi,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
+	    <meta charset="UTF-8">
+		<meta name="keywords" content="房山区动景,房山区VR,房山区旅游" >
+		<meta name="description" content="景区列表" >
+	    <script>
+	   		var mobile=/Android|webOS|iPhone|iPad|iPod|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ;
+    	  	if(mobile) {
+	            var lk=document.createElement('link');
+	                lk.setAttribute("rel","stylesheet");
+	                lk.setAttribute("type","text/css");
+	                lk.setAttribute("href","css/common.css");
+	            document.head.insertBefore(lk,document.head.childNodes[0])
+	        }   
+	        var index = Math.floor(Math.random()*5+1),
+	            urlId="";
+	        switch(index){
+	            case 1:
+	                urlId = "20171103678420";
+	                break;
+	            case 2:
+	                urlId = "20171103679681";
+	                break;
+	            case 3:
+	                urlId = "20171103685706";
+	                break;
+	            case 4:
+	                urlId = "20171103681829";
+	                break;
+	            case 5:
+	                urlId = "20171103683254";
+	                break;
+	            default:break;
+	        }	
+	        var pageObj = {
+	            pano_id:'31',
+	            pano_json_url:'pano/data/'+index+'/data.json',
+	            base_xml_url:'//data.taagoo.com/pano/base-xml.html?code='+urlId,
+	            login_id:'',
+	            login_url:'',
+	            login_avatar:'',
+	            is_praise:''
+	        };
+	    </script>
+	    <link rel="stylesheet" href="css/ph-index.css" />
+	</head>
+	<body>
+
+	<!-- <div id="fullscreenid" style="position:relative;width:100%; height:100%;"> -->
+	    
+
+	    <div id="pano" style="width:100%; height:100%;"></div>
+
+	   	<!-- <div class="index-title"> -->
+	   		<img class="index-title-img" src="images/index-title-ph.png" alt="">
+	   	<!-- </div> -->
+		<div class="index-bottom-ph">
+			<img src="images/gongsi.png" alt="">
+		</div>
+	 	<div class="ph-manu">
+	 		<img src="images/ph-manu-btn.png" alt="">
+	 	</div>
+	 	<div class="manu-list">
+	 		<button class="back-btn" type="button"><img src="images/back-arrow.png" alt=""></button>
+	 		<!-- <a class="manu-logo" href=""><img src="images/manu-logo.png" alt=""></a> -->
+	 		<ul class="ph-manu-ls">
+	 			<li><a href="http://lyw.bjfsh.gov.cn/"></a></li>
+	 			<li><a href="map.html"></a></li>
+	 			<li><a href="list.html"></a></li>
+	 		</ul>
+	 	</div>
+	 	<div class="modal-bg"></div>
+
+		<div class="index-title">
+	   		<img src="images/index-title.png" alt="">
+	   	</div>
+		<div class="index-bottom">
+			<a href="map.html" >进入动景地图</a>
+			<p class="copy">技术支持:北京大国慧谷科技股份有限公司<br />
+					服务热线:010-88122992
+			</p>
+		</div>	 	
+
+
+
+
+
+
+	   <script language="JavaScript" type="text/javascript" src="js/jquery-1.9.1.js"></script>
+	    <script language="JavaScript" type="text/javascript" src="js/vrshow.js"></script>
+	    <script language="JavaScript" type="text/javascript" src="js/tour.js"></script>
+		<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+		<script>
+		    var protocol = (("https:" == document.location.protocol) ? "https:" : "http:");
+		    //判断是否为微信
+		    function isWeiXin(){
+		        var ua = window.navigator.userAgent.toLowerCase();
+		        if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+		            return true;
+		        }else{
+		            return false;
+		        }
+		    }
+		    var shareData = {};
+
+		    window.onload=function(){
+		        shareData = {
+		            'title':"",
+		            'link':location.href,
+		            'desc':"",
+		            'imgUrl': protocol+"//pano.taagoo.com/normal/2016/09/23/157e40303922cc/thumb.jpg", // 分享图标
+		            success: function () {
+		                alert('分享成功');
+		            },
+		            cancel: function () {
+		                alert('您取消了分享');
+		            }
+		        };
+
+		        //是微信才会执行分享信息
+		        if(isWeiXin()){
+		            var oHead = document.getElementsByTagName('HEAD').item(0);
+		            var oScript= document.createElement("script");
+		            oScript.type = "text/javascript";
+		            oScript.src="http://data.taagoo.com/weixin/js-share.html?url="+encodeURIComponent(shareData.link)+"&js_callback=weixinCallback";
+		            oHead.appendChild( oScript);
+		        }
+		    }
+
+		    //微信回调
+		    function weixinCallback(obj){
+		        wx.config(obj);
+		        wx.ready(function() {
+		            wx.onMenuShareTimeline(shareData);
+		            wx.onMenuShareAppMessage(shareData);
+		            wx.onMenuShareQQ(shareData);
+		            wx.onMenuShareWeibo(shareData);
+		        });
+		        wx.error(function(res){
+		            //alert("wx.error"+res.errMsg);
+		        });
+		    }
+
+		    if(mobile){
+			    $(function(){
+			    	$(".ph-manu-ls li").on("touchstart",function(){
+			    		$(this).addClass('active').siblings().removeClass("active");
+			    		// return false;
+			    	});
+			    	$(".ph-manu").on("touchstart",function(){
+			    		$(".manu-list").addClass('manu-list-show');
+			    		$(".modal-bg").show();
+			    		return false;
+			    	})
+			    	$(".back-btn,.modal-bg").on("touchstart",function(){
+			    		$(".manu-list").removeClass('manu-list-show');
+			    		$(".modal-bg").hide();
+			    		return false;
+			    	});
+			    	$(".index-title-img,.index-bottom").on("touchstart",function(){
+			    		return false;
+			    	})
+			    })
+		    }else {
+
+
+		    }
+		</script>
+
+	</body>
+</html>

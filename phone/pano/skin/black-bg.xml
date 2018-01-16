@@ -1,0 +1,397 @@
+﻿<krpano>
+    <skin_settings maps="false" maps_type="bing" maps_bing_api_key="" maps_zoombuttons="false" gyro="true" webvr="true"
+                   littleplanetintro="false" title="false" thumbs="true" thumbs_width="120" thumbs_height="80"
+                   thumbs_padding="10" thumbs_crop="0|40|240|160" thumbs_opened="false" thumbs_text="true"
+                   thumbs_dragging="true" thumbs_onhoverscrolling="false" thumbs_scrollbuttons="false"
+                   thumbs_scrollindicator="false" thumbs_loop="false" tooltips_buttons="false" tooltips_thumbs="false"
+                   tooltips_hotspots="false" tooltips_mapspots="false" deeplinking="false" loadscene_flags="MERGE"
+                   loadscene_blend="OPENBLEND(0.5, 0.0, 0.75, 0.05, linear)"
+                   loadscene_blend_prev="SLIDEBLEND(0.5, 180, 0.75, linear)"
+                   loadscene_blend_next="SLIDEBLEND(0.5, 0, 0.75, linear)" loadingtext="载入中..." layout_width="100%"
+                   layout_maxwidth="100%" controlbar_width="100%" controlbar_height="0" controlbar_offset="0"
+                   controlbar_offset_closed="-40" controlbar_overlap.no-fractionalscaling="10"
+                   controlbar_overlap.fractionalscaling="0" design_skin_images="vtourskin.png" design_bgcolor="0x000000"
+                   design_bgalpha="0.5" design_bgborder="0" design_bgroundedge="1" design_bgshadow="0 4 10 0x000000 0.3"
+                   design_thumbborder_bgborder="3 0xFDE428 1.0" design_thumbborder_padding="2"
+                   design_thumbborder_bgroundedge="0" design_text_css="color:#FFFFFF; font-family:Arial;"
+                   design_text_shadow="1"/>
+    <!--<include url="%SWFPATH%/plugins/swipe_gallery.xml"/>-->
+    <!--<vtourskinxmlpath url="./"/>-->
+
+    <!--<include url="%SWFPATH%/plugins/tooltip.xml"/>-->
+    <settings name="auto_thumbs" thumb_size="90" thumb_background_size="92" thumb_spacing="20" left="0" right="0"
+              bottom="5" albums_right="0"/>
+    <events name="auto_thumbs" keep="true" onresize="resize_auto_thumbs()" onnewscene="update_active_thumb();"
+            onxmlcomplete="ifnot(thumbs_intitialized, create_auto_thumbs(); set(thumbs_intitialized, true););"
+            onmousedown="hide_container(get(layer[albums].current_container)); fadein_children(albums_scrollarea); set(layer[new_thumbs].visible, false); set(layer[albums].current_container, null);"/>
+
+    <layer name="thumbs_background" scalechildren="true" scale="1" type="container" align="leftbottom" x="0" y="-102"
+           width="100%" height="102" maskchildren="false" bgcolor="0x000000" bgalpha="0.5" keep="true"
+           state="closed" vr="false"></layer>
+
+    <layer name="auto_thumbs" type="container" keep="true" preload="true" scalechildren="true" scale="1"
+           align="leftbottom" x="0" y="0" width="100%" height="160" maskchildren="false" bgcolor="0x000000"
+           bgalpha="0.0" parent="thumbs_background">
+        <layer name="albums" scalechildren="true" scale="1" type="container" align="leftbottom" x="0" y="0" width="100%"
+               height="160" maskchildren="false" bgcolor="0x000000" bgalpha="0.0"
+               onout="delayedcall(disable_thumbs, .25, set(layer[new_thumbs].visible, false));">
+            <layer name="albums_left_shadow" style="scroll_shadow" align="left" ox="-100%" rotate="180"/>
+            <layer name="albums_right_shadow" style="scroll_shadow" align="right"/>
+            <layer name="albums_scrollarea" style="scrollarea" width="0" align="center"
+                   onscroll="move_thumbs(); show_or_hide_shadows();"
+                   onout="delayedcall(fadein, .25, fadein_children(name))"></layer>
+        </layer>
+        <layer name="new_thumbs" scalechildren="true" scale="1" type="container" align="leftbottom" x="0" oy="0"
+               width="100%" height="160" visible="false" maskchildren="false" bgcolor="0x000000" bgalpha="0.0"
+               onover="stopdelayedcall(fadein); stopdelayedcall(disable_thumbs); set(visible, true);"
+               onout="delayedcall(disable_thumbs, .25, set(layer[new_thumbs].visible, false));">
+            <layer name="thumbs_left_shadow" style="scroll_shadow" align="left" ox="-100%" rotate="180"/>
+            <layer name="thumbs_right_shadow" style="scroll_shadow" align="right"/>
+            <layer name="thumbs_scrollarea" width="100%" style="scrollarea" maskchildren="false"
+                   onscroll="show_or_hide_shadows();"></layer>
+        </layer>
+    </layer>
+
+  <style name="album_thumburl"  align="leftbottom" keep="true" x="8" y="8" 
+        alpha="1" width="82" height="81"
+         onclick="show_thumbs();"
+          />
+    
+    <style name="album"  url="%SWFPATH%/custom/images/group2.png"  align="leftbottom" keep="true" oy="0" alpha="1" width="98" height="97" y="-3"
+           blendmode="layer" as="album"
+           ondown="layer[thumbs_scrollarea].scrolltocenter(0,0);" />
+
+    <style type="container" name="thumb"  align="leftbottom" bgcolor="0xffffff" bgalpha="0.5" bgborder="0" bgroundedge="2" bgshadow="" maskchildren="true" bgcapture="true" keep="true" width="92" height="92"
+           onover="fadeout_siblings(name); fadeout_siblings(album);" blendmode="layer"
+           onclick="loadscene(get(scene), null, MERGE, BLEND(1));if(parent == albums_scrollarea, hide_container(get(layer[albums].current_container)); )"/>
+		   
+    <style name="thumb_image" ox="0" oy="0" width="0" height="0" keep="true" enabled="false"/>
+
+    <style name="thumbs_container" scalechildren="true" scale="1" type="container" align="leftbottom" x="0" y="-102"
+           width="100%" height="102" maskchildren="false" bgcolor="0x000000" bgalpha="0.5" keep="true"
+           visible="true" state="closed" vr="false" 
+          /> 
+  <style name="sub_thumbs_container"
+          direction="h" onloaded="setcenter(0,0);" 
+           scalechildren="true" scale="1" type="container" align="cneter" x="0" y="-5"
+         height="102" maskchildren="false"  keep="true" width="0"
+         visible="true" state="closed" vr="false" onscroll="move_thumbs(); "
+        /> 
+    <style name="scrollarea" url="%SWFPATH%/plugins/scrollarea.swf" keep="true" 
+           alturl="%SWFPATH%/plugins/scrollarea.js" direction="h" onloaded="setcenter(0,0);"
+           onhover_autoscrolling="true"/>
+    <style name="thumbs_count" url="%SWFPATH%/plugins/textfield.swf" keep="true" scale="2" align="rightbottom" x="16"
+           y="16" html="1" zorder="999999999" width="12" height="11" padding="0 3" roundedge="4" alpha=".95"
+           shadow="0.01" shadowalpha=".3" embeddedfontsd="true" enabled="false" onloaded=""
+           css="color:#777777;font-family: sans-serif;font-size: 14px;line-height: 23px;font-weight:400;text-align: center;"/>
+    <style name="scroll_shadow" url="%SWFPATH%/skin/shadow.png" keep="true" x="0" y="0" zorder="99"/>
+	
+	<!-- 缩略图container -->
+	<style name="thumb_image_title_container"
+		   type="container"
+		   bgcolor="0x000000"
+		   bgalpha="0.5" 
+		   y="35"
+		   height="20"
+		   width="100%"
+		   keep="true"
+		   align="center"
+	       />
+    <!-- 缩略图名称 -->
+	<style name="thumb_image_title_word"
+	       url="%SWFPATH%/plugins/textfield.swf"
+	       background="false"
+	       css="color:#FFFFFF;line-height:16px;font-size:12px;text-align:center"
+	       enabled="false"
+		   width="100%"
+		   keep="true"
+		   height="20"
+	       />
+		   
+    <action name="create_auto_thumbs">
+		if (scene.count GT 1
+        , 
+        copy(thumb_size,settings[auto_thumbs].thumb_background_size); 
+        copy(thumb_image_size, settings[auto_thumbs].thumb_size);
+        copy(style[thumb_image].width, thumb_image_size);
+        copy(style[thumb_image].height, thumb_image_size);
+        copy(style[thumb_image].oy, thumb_size); 
+        sub(style[thumb_image].oy, thumb_image_size);
+        div(style[thumb_image].oy, 2);
+        copy(style[thumb_image].ox,style[thumb_image].oy);
+        copy(layer[thumbs_scrollarea].height, thumb_size); 
+        copy(layer[albums_scrollarea].height,thumb_size);
+        copy(layer[albums].height, thumb_size);
+        copy(layer[new_thumbs].height, thumb_size); 
+        copy(layer[new_thumbs].y,thumb_size); 
+        add(thumb_width, thumb_size, settings[auto_thumbs].thumb_spacing); 
+        set(album_index, 0);
+        set(thumb_index, 0); 
+         
+        for(set(i,0), i LT scene.count, inc(i)
+        , 
+          <!-- txtadd(album_image_name,'album_image_',get(i));  -->
+           if(scene[0].album, 
+              
+              if (scene[get(i)].album !== null
+                , 
+                txtadd(album_name,'album_',get(i));
+                addlayer(get(album_name)); 
+                layer[get(album_name)].loadstyle(album);
+                set(layer[get(album_name)].parent, albums_scrollarea);
+                set(layer[get(album_name)].album_index,get(album_index));
+                mul(layer[get(album_name)].x, get(album_index),get(thumb_width)); 
+                if(i==0, set(layer[get(album_name)].url,"%SWFPATH%/custom/images/group1.png"); );
+                
+                <!-- 缩略图 -->
+                txtadd(album_thumburl,get(album_name),"_thumburl");
+                addlayer(get(album_thumburl));
+                layer[get(album_thumburl)].loadstyle(album_thumburl);
+                set(layer[get(album_thumburl)].parent,get(album_name));
+                set(layer[get(album_thumburl)].url,get(scene[get(i)].thumburl));
+                <!-- 缩略图标题 -->
+                txtadd(album_title_con,'album_title_con_',get(i)); 
+                addlayer(get(album_title_con));
+                layer[get(album_title_con)].loadstyle(thumb_image_title_container);
+                set(layer[get(album_title_con)].parent, get(album_thumburl));
+                set(layer[get(album_title_con)].y, 30);
+
+                txtadd(album_title_word,'album_title_word_',get(i)); 
+                addlayer(get(album_title_word));
+                set(layer[get(album_title_word)].html, get(scene[get(i)].album));
+                layer[get(album_title_word)].loadstyle(thumb_image_title_word);
+                set(layer[get(album_title_word)].parent, get(album_title_con));
+
+  
+                add(layer[albums_scrollarea].width, get(thumb_width)); 
+    
+                txtadd(container_name,get(album_name), '_container'); 
+                set(layer[get(album_thumburl)].container, get(container_name));
+                inc(album_index); 
+
+                <!-- txtadd(container_name, get(album_name),'_container'); -->
+                addlayer(get(container_name));
+                layer[get(container_name)].loadstyle(thumbs_container);
+                <!-- set(layer[get(container_name)].style,thumbs_container); -->
+                set(layer[get(container_name)].album,get(album_name)); 
+                
+                txtadd(scroll_sub_container,get(container_name),'_scroll');
+                addlayer(get(scroll_sub_container));
+        
+               layer[get(scroll_sub_container)].loadstyle(sub_thumbs_container);
+               if(device.flash,
+                     set(layer[get(scroll_sub_container)].url,'%SWFPATH%/plugins/scrollarea.swf');
+                     , 
+                     set(layer[get(scroll_sub_container)].url,'%SWFPATH%/plugins/scrollarea.js');
+                );
+               
+               set(layer[get(scroll_sub_container)].parent,get(container_name));
+              
+                set(thumb_index, 0);
+              );
+              create_thumb(); 
+              set(layer[get(thumb_name)].parent, get(scroll_sub_container));
+               add(layer[get(scroll_sub_container)].width, get(thumb_width)); 
+              ,
+               <!-- jscall(calc('console.log("krpano version: ")')); -->
+              create_thumb();
+              set(layer[get(thumb_name)].parent,albums_scrollarea); 
+              add(layer[albums_scrollarea].width, get(thumb_width)); 
+              ); <!--if 结束-->
+
+        ); <!--for 结束-->
+
+        trace(layer[albums].width);
+        trace(layer[auto_thumbs].width); 
+        trace(layer[auto_thumbs].pixelwidth);
+        trace(layer[auto_thumbs].pixelheight); 
+
+        );
+
+       if(settings[auto_thumbs].onstart, settings[auto_thumbs].onstart(); );
+    </action>
+	
+    <action name="create_thumb">
+      
+	    txtadd(thumb_name,'thumb_', get(i)); 
+		
+      addlayer(get(thumb_name));
+      layer[get(thumb_name)].loadstyle(thumb); 
+		 <!--  set(layer[get(thumb_name)].parent, get(container_name)); -->
+      copy(layer[get(thumb_name)].scene, scene[get(i)].name); 
+		  copy(layer[get(thumb_name)].album, album_name);
+      set(layer[get(thumb_name)].thumb_index, get(thumb_index)); 
+  		mul(layer[get(thumb_name)].x, get(thumb_index),get(thumb_width)); 
+       <!-- jscall(calc('console.log(" '+thumb_name+' x : '+layer[get(thumb_name)].x+'")'));  -->
+  		<!-- if(container_name, add(layer[get(container_name)].width, get(thumb_width)););  -->
+  		<!-- copy(layer[get(thumb_name)].tooltip, scene[get(i)].title);
+      copy(layer[get(thumb_name)].tooltip_oy,layer[get(album_name)].tooltip_oy); -->
+		
+      txtadd(thumb_image_name,'thumb_image_',get(i)); addlayer(get(thumb_image_name));
+      set(layer[get(thumb_image_name)].url,get( scene[get(i)].thumburl));
+      layer[get(thumb_image_name)].loadstyle(thumb_image); set(layer[get(thumb_image_name)].parent, get(thumb_name));
+		
+		<!-- 缩略图标题 -->
+		txtadd(thumb_image_title_con,'thumb_image_title_con_',get(i)); addlayer(get(thumb_image_title_con));
+        layer[get(thumb_image_title_con)].loadstyle(thumb_image_title_container);
+		set(layer[get(thumb_image_title_con)].parent, get(thumb_image_name));
+		txtadd(thumb_image_title_word,'thumb_image_title_word_',get(i)); addlayer(get(thumb_image_title_word));
+		set(layer[get(thumb_image_title_word)].html, get(scene[get(i)].title));
+        layer[get(thumb_image_title_word)].loadstyle(thumb_image_title_word);
+		set(layer[get(thumb_image_title_word)].parent, get(thumb_image_title_con));
+		
+        inc(thumb_index); if(i == 0, copy(layer[auto_thumbs].active_album, album_name);
+        copy(layer[auto_thumbs].active_thumb, thumb_name); );
+    </action>
+    <action name="resize_auto_thumbs">copy(layer[auto_thumbs].width, area.pixelwidth);
+        sub(layer[auto_thumbs].width,settings[auto_thumbs].left); sub(layer[auto_thumbs].width,
+        settings[auto_thumbs].right); copy(layer[auto_thumbs].x, settings[auto_thumbs].left);
+        copy(layer[auto_thumbs].y,settings[auto_thumbs].bottom); copy(layer[albums].width, layer[auto_thumbs].width);
+        sub(layer[albums].width,settings[auto_thumbs].albums_right); add(layer[albums].width,
+        settings[auto_thumbs].right);
+    </action>
+    <action name="show_thumbs">
+      
+        stopdelayedcall(disable_thumbs);
+       
+        if(!last_parent,set(last_parent,'album_0'););
+        set(layer[get(last_parent)].url,"%SWFPATH%/custom/images/group2.png");
+        if(container == last_show_sub_container AND layer[get(container)].state=='opened'
+          ,
+            set(layer[get(container)].state, 'closed');
+            tween(layer[get(container)].y, -102, 0.5, easeOutQuint);
+            <!-- set(layer[get(last_parent)].url,"%SWFPATH%/custom/images/group2.png"); -->
+          ,
+            if(layer[get(last_show_sub_container)].state=='opened',
+             set(layer[get(last_show_sub_container)].state, 'closed');
+             tween(layer[get(last_show_sub_container)].y, -102, 0.5, easeOutQuint);
+             
+            );
+            if(layer[get(container)].state=='closed',
+            set(layer[get(container)].state, 'opened');
+            tween(layer[get(container)].y, 202, 0.5, easeOutQuint);
+            set(last_show_sub_container,get(container));
+            set(last_parent,get(parent));
+            set(layer[get(parent)].url,"%SWFPATH%/custom/images/group1.png");
+            );
+          );
+
+          <!-- set(layer[thumbs_background].visible, true);  -->
+      <!--   if(
+          show, 
+          set(layer[thumbs_background].state, 'opened');
+          tween(layer[thumbs_background].y, 97, 0.5, easeOutQuint);
+          set(layer[thumbs_background].visible, true); 
+          ,
+          set(layer[thumbs_background].state, 'closed');
+          tween(layer[thumbs_background].y, -102, 0.5, easeOutQuint,
+          set(layer[thumbs_background].visible, false););
+        ); 
+ -->
+
+      <!--   if (layer[albums].current_container,
+          copy(layer[get(container)].zorder,layer[get(layer[albums].current_container)].zorder); 
+        );
+        inc(layer[get(container)].zorder); 
+        set(layer[albums].current_album, get(name));
+        set(layer[albums].current_container, get(container)); 
+        set(layer[get(container)].visible, true);
+        tween_alpha(get(container), 1, .25); 
+        set(layer[new_thumbs].visible, true);
+        set(layer[thumbs_scrollarea].width,get(layer[get(container)].width));
+        if (device.pixelratio == 1,
+          if(device.html5,mul(layer[thumbs_scrollarea].width, 2);); 
+        );  -->
+      <!--   move_thumbs();
+        show_or_hide_shadows(); -->
+    </action>
+    <action name="hide_thumbs">delayedcall(get(container), 0, hide_container(get(container)); );</action>
+    <action name="hide_container">tween(layer[%1].alpha, 0, .25, easeOutQuad, set(layer[%1].visible, false));
+        tween(layer[thumbs_left_shadow].alpha, 0, .1); tween(layer[thumbs_right_shadow].alpha, 0, .1);
+    </action>
+    <action name="fadeout_siblings">for(set(i, 0), i LT layer.count, inc(i), if(layer[get(i)].parent ==
+        layer[get(%1)].parent, if(layer[get(i)].parent == albums_scrollarea, if(scene[0].album, tween_alpha(get(i), .6);
+        , tween_alpha(get(i), .85); ); , tween_alpha(get(i), .85); ); ) ); tween_alpha(get(%1), 1);
+    </action>
+  <action name="update_active_thumb">
+  	<!-- if(scene.count GT 1 ,  -->
+      txtadd(active_thumb_name, 'thumb_', get(scene[get(xml.scene)].index));
+
+  		set(layer[get(layer[auto_thumbs].active_thumb)].bgcolor,'0xffffff'); 
+  		set(layer[get(layer[auto_thumbs].active_thumb)].bgalpha,0.5); 
+  		
+      copy(layer[auto_thumbs].active_thumb,active_thumb_name); 
+  		
+  		set(layer[get(layer[auto_thumbs].active_thumb)].bgcolor,'0xF6A600'); 
+  		set(layer[get(layer[auto_thumbs].active_thumb)].bgalpha,1); 
+  		
+  		if(layer[get(layer[auto_thumbs].active_album)].as == album,
+          	copy(layer[get(layer[auto_thumbs].active_album)].crop,album_crop); , 
+  			if(layer[auto_thumbs].active_album,copy(layer[get(layer[auto_thumbs].active_album)].crop,thumb_crop)); ); 
+  			copy(layer[auto_thumbs].active_album,layer[get(active_thumb_name)].album); 
+  			if(layer[get(layer[auto_thumbs].active_album)].as == album,
+          		copy(layer[get(layer[auto_thumbs].active_album)].crop,active_album_crop); , 
+  				if(layer[auto_thumbs].active_album, copy(layer[get(layer[auto_thumbs].active_album)].crop,active_thumb_crop); ) 
+  			);
+    <!-- ); -->
+    </action>
+    <action name="fadein_children">for(set(i, 0), i LT layer.count, inc(i), if(layer[get(i)].parent == %1,
+        tween_alpha(get(i), 1); ) );
+    </action>
+    <action name="tween_alpha">tween(layer[%1].alpha, %2, .25);</action>
+    <action name="move_thumbs">if(layer[albums].current_container, copy(thumbs_scrollarea_width,
+        layer[thumbs_scrollarea].width); if (device.pixelratio == 1, if (device.html5, div(thumbs_scrollarea_width, 2);
+        ); ); if (layer[new_thumbs].pixelwidth GE thumbs_scrollarea_width, mul(a,
+        thumb_size,layer[get(layer[albums].current_album)].album_index); add(a, thumb_size); div(b, thumb_size, 2);
+        div(c,layer[get(layer[albums].current_container)].width, 2); sub(result, a, b); sub(result, c);
+        set(layer[get(layer[albums].current_container)].x, get(result));
+        sub(layer[get(layer[albums].current_container)].x, get(layer[albums_scrollarea].loverflow));
+        if(layer[get(layer[albums].current_container)].x GT 0,
+        add(ox_plus_thumbs_width,layer[get(layer[albums].current_container)].x,
+        layer[get(layer[albums].current_container)].width); if(ox_plus_thumbs_width GT layer[new_thumbs].pixelwidth,
+        sub(dif, ox_plus_thumbs_width, layer[new_thumbs].pixelwidth); sub(layer[get(layer[albums].current_container)].x,
+        dif); ); , set(layer[get(layer[albums].current_container)].x, 0); ); ,
+        set(layer[get(layer[albums].current_container)].x,0); ); );
+    </action>
+    <action name="show_or_hide_shadows">if(layer[albums_scrollarea].loverflow GT 3,
+        tween(layer[albums_left_shadow].alpha, 1, .1); , tween(layer[albums_left_shadow].alpha, 0, .1); );
+        if(layer[albums_scrollarea].roverflow GT 3, tween(layer[albums_right_shadow].alpha, 1, .1); ,
+        tween(layer[albums_right_shadow].alpha, 0, .1); ); if(layer[thumbs_scrollarea].loverflow GT 3,
+        tween(layer[thumbs_left_shadow].alpha, 1, .1); , tween(layer[thumbs_left_shadow].alpha, 0, .1); );
+        if(layer[thumbs_scrollarea].roverflow GT 3, tween(layer[thumbs_right_shadow].alpha, 1, .1); ,
+        tween(layer[thumbs_right_shadow].alpha, 0, .1); );
+    </action>
+    <control mouse="drag" touch="drag" zoomtocursor="false" zoomoutcursor="false" draginertia="0.1" dragfriction="0.9"
+             movetoaccelerate="1.0" movetospeed="10.0" movetofriction="0.8" keybaccelerate="0.09" keybfriction="0.94"
+             keybfovchange="0.25" mousefovchange="1.0" fovspeed="3.0" fovfriction="0.9" bouncinglimits="true"/>
+    <cursors standard="default" dragging="move" moving="move"/>
+    <include url="%SWFPATH%/plugins/webvr.xml" devices="html5"/>
+    <!-- pluginurl="" -->
+     <plugin name="WebVR" keep="true" devices="html5" pluginurl="%SWFPATH%/plugins/webvr.js" url=""
+            multireslock.desktop="true" multireslock.mobile.or.tablet="false" mobilevr_support="true"
+            mobilevr_fake_support="true"
+            onavailable="removelayer(webvr_enterbutton); skin_arrange_buttons(); webvr_onavailable();"
+            onentervr="hotspot_enterVR();set(webvr_open,true);skin_showloading(false); webvr_onentervr(); webvr_setup(); skin_reloadscene_webvr();js(toggleBtns(''));"
+            onexitvr="hotspot_exitVR();set(webvr_open,false);webvr_onexitvr(); webvr_setup(); skin_reloadscene_webvr();js(toggleBtns(true));"/> 
+    <style name="webvr_button_style" border="false" roundedge="calc:1.0"
+           backgroundcolor="get:skin_settings.design_bgcolor" backgroundalpha="get:skin_settings.design_bgalpha"
+           shadow="0.01" shadowrange="10.0" shadowangle="90.0" shadowcolor="0x30261B" shadowalpha="0.50"
+           css="calc:skin_settings.design_text_css + ' color:#FFFFFF;font-size:' + 20*webvr_setup_scale*webvr_button_scale + 'px;'"/>
+    <layer name="webvr_rotate_to_landscape_request" keep="true" vr="true" devices="mobile" url="rotate_device.png"
+           scale="0.5" align="top" edge="center" y="28%" autoalpha="true" alpha="0.0" enabled="false"/>
+    <events name="webvr_events" keep="true" devices="html5" onresize.mobile="webvr_act_as_gyro_in_portrait_mode();"
+            onviewchange=""/>
+    <action name="webvr_setup">if(webvr.isenabled, copy(loadscene_flags_backup, skin_settings.loadscene_flags);
+        set(skin_settings.loadscene_flags, MERGE|KEEPVIEW|KEEPMOVING|NOPREVIEW);
+        webvr_act_as_gyro_in_portrait_mode(true); if(scene.count GT 1, set(hotspot[webvr_prev_scene].visible, true);
+        set(hotspot[webvr_next_scene].visible, true); set(events[webvr_events].onviewchange, webvr_menu_following()); );
+        , if(loadscene_flags_backup !== null, copy(skin_settings.loadscene_flags, loadscene_flags_backup));
+        tween(layer[webvr_rotate_to_landscape_request].alpha, 0.0, 0.0); set(hotspot[webvr_prev_scene].visible, false);
+        set(hotspot[webvr_next_scene].visible, false); set(events[webvr_events].onviewchange, null); );
+    </action>
+  
+
+
+
+
+</krpano>

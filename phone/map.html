@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta charset="UTF-8">
+    <title>交通指引 </title>
+    <link rel="stylesheet" type="text/css" href="css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
+    <!-- <link rel="stylesheet" type="text/css" href="css/frontend_index.css"/> -->
+    <!-- <link rel="stylesheet" type="text/css" href="css/swiper-3.3.1.min.css"/> -->
+    <link rel="stylesheet" type="text/css" href="css/animate.min.css"/>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+     <!-- <style>
+         .amap-e, .amap-layers, .amap-maps, .amap-tile, .amap-tile-container {
+            margin-left: 200px;
+         }
+     </style> -->
+</head>
+<body>
+    <img src="images/back-arrow.png" alt="" class="go-back">
+    <div class="public-body" id="container" style="">
+    </div>
+   <!--  <div style="position: absolute;width: 33.75rem;height: 5rem;border:1px solid red;z-index: 9999;left: 0;top: 0;"></div> -->
+   
+   
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=c6a41fadba9a8a02660d68c99403122d"></script>
+    <script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+    <script src="js/jquery-1.9.1.js"></script>
+    <!-- <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script> -->
+    <script type="text/javascript">
+    var filter_data=[
+        {
+            "name":"yunJuSi",
+            "url":"//uri.amap.com/marker?position=115.774054,39.609223&name=云居寺&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.774054",
+            "lat":"39.609223",
+            "id":"20170903586941",
+            "title":"云居寺",
+            "detail":'云居寺历史悠久，是佛教经籍荟萃之地，寺内珍藏着石经、纸经、木版经号称“三绝”。被誉为“北京的敦煌”、“世界之最”。',
+            "img":"images/yunjs-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"1"
+        },{
+            "name":"guShanZhai",
+            "url":"//uri.amap.com/marker?position=115.624433,39.632105&name=孤山寨&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.624433",
+            "lat":"39.632105",
+            "id":"20170903588916",
+            "title":"孤山寨",
+            "detail":'孤山寨内步步皆景，四季如画。漫步其中可尽赏“风于林中动，虫在石间鸣，山出叠翠色，甘泉润琴声”之美景。',
+            "img":"images/gushzh-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"3"
+        },{
+            "name":"baDu",
+            "url":"//uri.amap.com/marker?position=115.607868,39.63872&name=八渡天禄山水上乐园&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.607868",
+            "lat":"39.63872",
+            "id":"20170903591184",
+            "title":"八渡天禄山水上乐园",
+            "detail":'八渡天禄山沿拒马河依山而建。这里山奇水秀、峰林叠翠，河岸绿柳成荫，金沙漫漫，迷人的山野风光让人流连忘返，乐不思归。',
+            "img":"images/badu-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"4"
+        },{
+            "name":"shiDu",
+            "url":"//uri.amap.com/marker?position=115.594358,39.634071&name=十渡拒马乐园&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.594358",
+            "lat":"39.634071",
+            "id":"20170903587347",
+            "title":"十渡拒马乐园",
+            "detail":'十渡拒马乐园，是一处闻名遐迩的旅游胜地。这里河宽水清，山势险峻，步步皆景，四季如画，以“幽、古、秀”的美景享誉中华。',
+            "img":"images/shidu-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"5"
+        },{
+            "name":"shuWuDu",
+            "url":"//uri.amap.com/marker?position=115.530464,39.668513&name=十五渡东湖港&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.530464",
+            "lat":"39.668513",
+            "id":"20170903593538",
+            "title":"十五渡东湖港",
+            "detail":'东湖港以瀑高、潭多而享有盛名，素有“幽谷叠瀑、檀林氧吧”的美誉。“华北第一梯”倚峭而建，有“登云梯而览群山”之势。',
+            "img":"images/donghg-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"6"
+        },{
+            "name":"zhouKouDian",
+            "url":"//uri.amap.com/marker?position=115.936844,39.687376&name=周口店北京猿人遗址博物馆&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.936844",
+            "lat":"39.687376",
+            "id":"20170803385136",
+            "title":"周口店北京猿人遗址博物馆",
+            "detail":'周口店遗址博物馆是一座古人类遗址博物馆，向我们介绍了古人类的生活环境、生活状况。是人类远古文化的宝库。',
+            "img":"images/zhoukd-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"7"
+        },{
+            "name":"shiHuaDong",
+            "url":"//uri.amap.com/marker?position=115.946651,39.79591&name=石花洞&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.946651",
+            "lat":"39.79591",
+            "id":"20170803383307",
+            "title":"石花洞",
+            "detail":'石花洞又名潜真洞，形成于七千万年前的造山运动。是中国第一座以岩溶洞穴自然景观为主题的地质公园。',
+            "img":"images/shihd-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"8"
+        },{
+            "name":"shengLianShan",
+            "url":"//uri.amap.com/marker?position=115.699617,39.841507&name=圣莲山&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.699617",
+            "lat":"39.841507",
+            "id":"20170903590320",
+            "title":"圣莲山",
+            "detail":'圣莲山古称太山，是道教的聚集之地。圣莲山山势陡峭，巍峨俊秀，山下幽谷深邃，溪流潺潺，素有京西小五岳之美誉。',
+            "img":"images/shenglsh-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"9"
+        },{
+            "name":"baiHuaShan",
+            "url":"//uri.amap.com/marker?position=115.574133,39.823536&name=百花山自然风景区&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.574133",
+            "lat":"39.823536",
+            "id":"20170903594914",
+            "title":"百花山自然风景区",
+            "detail":'百花山以花繁著称，众多的花卉植物成就了百花山的三季花香。具有“秀逸、雄奇、幽深、瑰丽、狂狷”的特点。',
+            "img":"images/baihs-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"10"
+        },{
+            "name":"baiCaoPan",
+            "url":"//uri.amap.com/marker?position=115.635066,39.774728&name=白草畔自然风景区&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.635066",
+            "lat":"39.774728",
+            "id":"20170903595274",
+            "title":"白草畔自然风景区",
+            "detail":'白草畔又称百草畔，是百花山的主峰，景区内以百花争妍的高山草甸为特点，空气清新，环境幽美，气候凉爽宜人。',
+            "img":"images/baicp-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"11"
+        },{
+            "name":"diZhibwg",
+            "url":"//uri.amap.com/marker?position=115.874229,39.584781&name=世界地质公园博物馆&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.874229",
+            "lat":"39.584781",
+            "id":"20170803384122",
+            "title":"世界地质公园博物馆",
+            "detail":'世界地质公园博物馆以“地球演化、生物演化、人类进化”为主线的一座展示地质科技和文化的博物馆。',
+            "img":"images/dizhigy-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"12"
+        },
+        {
+            "name":"shangFangShan",
+            "url":"//uri.amap.com/marker?position=115.826681,39.674037&name=上方山森林公园&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.826681",
+            "lat":"39.674037",
+            "id":"20170903589108",
+            "title":"上方山森林公园",
+            "detail":'上方山是一座集自然、佛教和溶洞为一体的综合性的国家森林公园，为北京西南天然植物园绿色健身房。',
+            "img":"images/shangfsh-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"13"
+        },{
+            "name":"yinHuDong",
+            "url":"//uri.amap.com/marker?position=115.903165,39.798302&name=银狐洞&src=mypage&coordinate=gaode&callnative=0",
+            "lng":"115.903165",
+            "lat":"39.798302",
+            "id":"20170903592828",
+            "title":"银狐洞",
+            "detail":'银狐洞是中国华北地区唯一开放的水旱洞为一体的自然风景溶洞。洞顶倒挂着形似狐狸身的雪白石晶体，被称“中华国宝”—银狐。',
+            "img":"images/yinhd-p.jpg",
+            "add":"",
+            "imgType":1,
+            "jibie":4,
+            "number":"14"
+        },
+        
+        
+    ];
+        var myMap = {
+            mapObj:null,
+            nowPoint:[],
+            city:null,
+            addPointNum:[],
+            addMarkerObj:[],
+            searchPoint:[],
+            init:function(){
+                var map = new AMap.Map('container',{
+                    resizeEnable: true,
+                    zoom: 9,
+                    center: [115.759141,39.705743],
+     				               
+                });
+                this.mapObj= map;
+                this.mapObj.setFeatures(["bg","road","building"]);
+               this.addPoint(filter_data);
+               // AMapUI.loadUI(['control/BasicControl'], function(BasicControl) {
+
+               //      var zoomCtrl1 = new BasicControl.Zoom({
+               //              theme: 'dark'
+               //          }),
+               //          zoomCtrl2 = new BasicControl.Zoom({
+               //              position: 'br',
+               //              showZoomNum: true
+               //          });
+
+               //      myMap.mapObj.addControl(zoomCtrl1);
+
+               //  });
+            },
+            addPoint:function(obj) {
+                myMap.mapObj.remove(this.addMarkerObj);
+                for (var i in obj) {
+                    this.addMarket(i, obj[i]);
+                }
+            },
+            addMarket:function(index, data) {
+                // this.mapObj.remove(this.addMarkerObj);
+                
+                var img = './images/point-img.png',
+                    i = data.id,
+                    index = parseInt(index);
+
+                var ar = [data.lng, data.lat];
+                var marker = new AMap.Marker({
+                    position: ar,
+                    map: myMap.mapObj,
+                    extensions: 'all',
+                    content: '<div class="marker-route marker-marker-bus-from"><image src="./images/point-img.png" /><p class="point-number">' + data.number+ '</p></div>',  //自定义点标记覆盖物内容
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(31, 40), //图标大小
+                        image: img,
+                    }),
+                    label: {
+                        i: 0
+                    },
+                    // offset: new AMap.Pixel(-17, -42), //相对于基点的偏移位置
+                    draggable: false, //是否可拖动
+                });
+                this.addMarkerObj.push(marker);
+
+                marker.on('click',function(e){
+                    target=e.target;
+                    var point=[];
+                    point.push(e.target.getPosition().lng);
+                    point.push(e.target.getPosition().lat);
+                    myMap.newWindow(point,data);
+                    console.log(point);
+                    // myMap.mapObj.setCenter(ar);
+
+                });
+            },
+            newWindow:function(point,data){
+                var infoWindow = new AMap.InfoWindow({
+                    isCustom: true,  //使用自定义窗体
+                    autoMove:true,
+                    content: createInfoWindow(point,data),
+                    position:AMap.LngLat(point[0],point[1]),
+                    offset: new AMap.Pixel(-1, -50)//-113, -140
+                });
+                infoWindow.open(myMap.mapObj,point);
+                console.log(point)
+                setTimeout(function(){
+                    myMap.mapObj.setCenter(point);
+                },250)
+            },
+            addToolbar:function(){
+            	var _this=this;
+            	window.onload = function() {
+    				 _this.mapObj.plugin(["AMap.ToolBar"], function() {
+    					 _this.mapObj.addControl(new AMap.ToolBar());
+    				});
+    				if(location.href.indexOf('&guide=1')!==-1){
+    					 _this.mapObj.setStatus({scrollWheel:false})
+    				}
+    			}
+            }
+        };
+        function createInfoWindow(poi,data) {
+            var info = document.createElement("div");
+            info.className = "info";
+                    //插入窗口。
+             var htl='<div class="win-title flex-box"><h5 class="flex1 text-over">'+data.title+'</h5><img class="window-close" onClick="closeInfoWindow();" src="images/window-close.png" alt=""></div>'+
+                    '<div class="win-content flex-box"><div class="img-box"><img src="'+data.img+'" alt="" class="name-img"></div>'+
+                    ' <div class="window-inf-box flex1"><p>'+data.detail+'</p>'+
+                    '<div class="btn-grp clearfix"><a href="'+data.url+'" target="_blank"><img src="images/go-here.png" alt=""></a>'+
+                    '<a href="pano.html?name='+data.name+'&id='+data.id+'&nav='+data.number+'" ><img src="images/vr-preview.png" alt=""></a></div></div></div><img class="map-arrow" src="./images/map-arrow.png">'; 
+            info.innerHTML=htl;
+            return info;
+        }      
+        function closeInfoWindow() {
+            myMap.mapObj.clearInfoWindow();
+        }
+       
+
+    </script>
+    
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+        myMap.init();
+        AMap.event.addListener(myMap.mapObj, "click", function(e) {
+            closeInfoWindow();
+        });
+        $(".manu-more").on('click',function(){
+            $(this).toggleClass("manu-showed");
+            $(".sub-ls").toggleClass("show-sub-ls");
+        });
+        $(".go-back").on('click',function(){
+            window.history.back();
+        })
+    })
+        
+    </script>
+</body>
+</html>

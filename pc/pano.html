@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>房山</title>
+   <!--  <meta name="viewport" content="target-densitydpi=device-dpi,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/> -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="IE=edge"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/alivideo.css" />
+    <link rel="stylesheet" href="css/zy.css" />
+    <script src="js/data.js"></script>
+    <script>
+        function GetRequest() {
+		    var url = location.search; //获取url中"?"符后的字串
+		    var theRequest = new Object();
+		    if (url.indexOf("?") != -1) {
+		        var str = url.substr(1);
+		        strs = str.split("&");
+		        for(var i = 0; i < strs.length; i ++) {
+		            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		        }
+		    }
+		    return theRequest;
+		}
+		var request = GetRequest();
+		// var reg = /^[0-9]+.?[0-9]*$/;
+        var pageObj = {
+                    pano_id:'31',
+                    pano_json_url:'pano/data/'+request.name+'/data.json',
+                    base_xml_url:'//data.taagoo.com/pano/base-xml.html?code='+request.id,
+                    login_id:'',
+                    login_url:'',
+                    login_avatar:'',
+                    is_praise:''
+                };
+        
+         document.querySelector("title").innerText=  localData["nav"+request.nav].name;
+    </script>
+    
+</head>
+<body>
+
+
+<div id="fullscreenid" style="position:relative;width:100%; height:100%;">
+    <div id="panoBtns" style="display:none;">
+            <!-- <div id="panoList"></div>
+            <div id="menu"></div> -->
+            <!-- <div class="logoBox">
+                <img src="" alt="">
+            </div> -->
+            <div class="btnGroup">
+                    <div id="webvr" class="webvr" onClick="showWebVR()" >
+                        <img src="images/vr.png" alt="vr模式">
+                    </div>
+                    <div id="audiobtn" class="audiobtn" onClick="pauseSpeech(this)" >
+                        <img src="images/music-open.png" alt="场景音乐">
+                    </div>
+                    <div id="nav-btn" class="location">
+                            <img src="images/to-point.png" alt="导览">
+                    </div>
+                    <div id="detail" class="detail" data-toggle="modal" data-target="#jianjie">
+                        <img src="images/modal-show.png" alt="简介">
+                    </div>
+                    <div id="call" class="call" data-toggle="modal" data-target="#call-modal">
+                            <img src="images/call.png" alt="电话"> 
+                    </div>
+                   <!--  <div id="weixin" class="weixin" data-toggle="modal" data-target="#weixin-modal">
+                        <img src="images/weixin.png" alt="微信"> 
+                    </div> -->
+                        <!-- onClick="pauseMusic(this)" -->
+                    <!--<div id="autoratate" class="autoratate" onClick="rotateEx()">
+                        <img src="images/rotate.png" alt="自动旋转">
+                    </div>-->
+                    <!--<div id="vidoe-btn" class="autoratate" onClick="">
+                        <img src="images/video.png" alt="自动旋转">
+                    </div>-->
+            </div>         
+      
+    </div>
+
+    <div id="pano" style="width:100%; height:100%;"></div>
+<param name="wmode" value="opaque" />
+    <div class="modal" id="jianjie" data-backdrop="static" data-keyboard="false" style="z-index:2002">
+        <div class="modal-dialog">
+            <div class="modal-header text-center" >
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="images/window-close.png" alt=""></button>
+                <span>
+                    简介
+                </span>
+            </div>
+            <div class="modal-body">
+                <p class="introductionText"></p>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="call-modal" data-backdrop="static" data-keyboard="false" >
+        <div class="modal-dialog">
+            <div class="modal-header text-center" >
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="images/window-close.png" alt=""></button>
+                <span >
+                    电话
+                </span>
+            </div>
+            <div class="modal-body">
+                <p class="nameLine"><b>公司名称：</b>北京大国慧谷科技股份有限公司</p>
+                <p class="callLine"><b>服务热线：</b>010-88122992</p>
+                <a href="tel:010-88122992" class="call-btn"><img src="images/modal-call-btn.png" alt=""></a>
+            </div>
+        </div>
+    </div>    
+   <!--  <div class="modal" id="weixin-modal" data-backdrop="static" data-keyboard="false" >
+        <div class="modal-dialog">
+            <div class="modal-header text-center" >
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="images/window-close.png" alt=""></button>
+                <span >
+                    微信
+                </span>
+            </div>
+            <div class="modal-body">
+                <img class="weixin2wm" src="images/2wm.png" alt="">
+                <p>请打开微信客户端<span>“扫一扫”</span></p>
+            </div>
+        </div>
+    </div>     -->
+
+    <!-- <div id="logreg">
+    </div> -->
+    </div>
+    <div id="daolan-box" class="daolan-def daolan-hide">
+        <img src="" alt="">
+        <ul>
+           
+        </ul>
+    </div>
+
+    <div class="modal" id="video_player_modal" data-keyboard="false" style="z-index:2002;background: transparent;margin:0;">
+        <div class="modal-dialog" style="width: 100%;height: 100%;border-width: 0;">
+            <div class="modal-body" style="padding: 0;width: 100%;height: 100%;">
+                <div class="prism-player" id="J_prismPlayer" >
+                    <div class="spotVideoBox" id="spotVideoBox"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script language="JavaScript" type="text/javascript" src="js/jquery-1.9.1.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/UtoVRPlayerGuide.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/common.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/vrshow.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/tour.js"></script>    
+    <script>
+        $(function(){
+            plugins_init_function.push(bgmusic_init);
+             plugins_init_function.push(showvrglass_init);
+             plugins_init_function.push(showlogo_init);
+            $("#logoImg").show();
+            plugins_init_function.push(custom_logo_init);  
+            plugins_init_function.push(link_init);
+            $('#mapMarkModal').on('hide.zui.modal', function (e) {
+                toggleBtns(true);
+            });    
+             plugins_init_function.push(custom_user_init); 
+              plugins_init_function.push(open_alert_init);  
+              plugins_init_function.push(shade_sky_floor_init);  
+              plugins_init_function.push(bgvoice_init);                  
+        })
+            function bgmusic_init(data,settings){
+//全局背景音乐
+                var musicObj = (undefined!=data.global_music && data.global_music.mediaUrl)?data.global_music:'';
+                if (musicObj) {
+                    settings["onstart"] += "playsound(bgmusic, '" + data.global_music.mediaUrl + "', 0);";
+                }else{
+                    if(undefined!=data.scene_bg_music) {
+                        for(var scene_name in data.scene_bg_music){
+                            var objOne = data.scene_bg_music[scene_name];
+                            if (objOne.mediaUrl) {
+                                settings['scene[scene_' + objOne.sceneID + '].bgmusic'] = objOne.mediaUrl;
+                            }
+                        }
+                    }
+                }
+                settings["events[skin_events].onloadcomplete"]+="js(toggleMusicBtn(get(xml.scene)));";
+            }
+            function toggleMusicBtn(sceneName) {
+                var panoData = $("body").data("panoData");
+                var musicObj = (undefined!=panoData.global_music && panoData.global_music.mediaUrl)?panoData.global_music:null;
+                if(musicObj){
+                    $('.btn_bgmusic,.btn_bgmusic_off').show();
+                }else if(panoData.scene_bg_music && undefined!=panoData.scene_bg_music[sceneName] && panoData.scene_bg_music[sceneName].mediaUrl){
+                    $('.btn_bgmusic,.btn_bgmusic_off').show();
+                }else{
+                    $('.btn_bgmusic,.btn_bgmusic_off').hide();
+                }
+            }
+            function pause_bgMusic(el) {
+                var krpano = document.getElementById('krpanoSWFObject');
+                krpano.call("pausesoundtoggle(bgmusic);pausesoundtoggle(bgm);");
+                if($(el).find('img').attr("src").indexOf("off") == -1){
+                $(el).find('img').attr("src","images/music-btn-off.png");
+                }else{
+                    $(el).find('img').attr("src","images/music.png");
+                }
+            }
+            function toggleMusic(el) {
+                if ($(el).hasClass("btn_bgmusic")) {
+                    $(el).removeClass("btn_bgmusic");
+                    $(el).addClass("btn_bgmusic_off");
+                } else {
+                    $(el).removeClass("btn_bgmusic_off");
+                    $(el).addClass("btn_bgmusic");
+                }
+            }        
+        function showvrglass_init(data,settings){
+            settings['skin_settings.webvr'] = data.showvrglasses==1 ? false : true;
+        }
+        function showWebvrBtn(){
+            $('.btn_vrmode').show();
+        }
+  
+        function showlogo_init(data){
+            if(data.showlogo=='1'){
+                $("#logoImg").hide();
+            }else{
+                $("#logoImg").show();
+            }
+        }
+    
+        function custom_logo_init(data){
+            var logoObj = data.custom_logo;
+            if(logoObj){
+                $('#logoImg').attr('src', logoObj.imgPath);
+                if(logoObj.logoLink) {
+                    $('#logoImg').attr('onclick', 'javascript:window.open("' + logoObj.logoLink + '")');
+                }
+            }
+        }
+        function link_init(data){
+            return false;
+            $(".vrshow_container_3_min .img_desc_container_min:first").nextAll().remove();
+            if (data.custom_right_button.linkSettings && data.custom_right_button.linkSettings.length > 0) {
+                $(data.custom_right_button.linkSettings).each(function(idx){
+                    var imgSrc = this.icon;
+                    var title = this.title;
+                    var htmlStr = '';
+                    if(this.type == 3){
+                        var locationData = this.content;
+                        htmlStr += '<div class="img_desc_container_min img_add" >'+
+                            '<img src="'+imgSrc+'" onclick="showFootMark(this)" lng="'+this.lng+'" lat="'+this.lat+'" address="'+this.address+'">'+
+                            '<div class="img_desc_min">'+title+'</div>'+
+                            '</div>';
+                        $(".vrshow_container_3_min").append(htmlStr);
+                        $(".vrshow_container_3_min > div:last img").data("locationData",locationData);
+                    }else{
+                        var url = this.content;
+                        if(!isNaN(url)){
+                            url = "tel://" + url;
+                        }else{
+                            if(url.indexOf('http://') != 0&&url.indexOf('https://') != 0){
+                                url = 'http://' + url;
+                            }
+                        }
+                        htmlStr += '<div class="img_desc_container_min img_add" >'+
+                            '<img src="'+imgSrc+'" onclick="lookLinkUrl(\''+url+'\')" '+(isIos()?'':'data-toggle="tooltip"')+' title="'+(url.length > 20 ? url.substring(0,20)+'...' : url)+'">'+
+                            '<div class="img_desc_min">'+title+'</div>'+
+                            '</div>';
+                        $(".vrshow_container_3_min").append(htmlStr);
+                    }
+                });
+                $('.vrshow_container_3_min [data-toggle=tooltip]').tooltip({});
+            }
+        }
+        function isIos(){
+            var ua = navigator.userAgent.toLowerCase();
+            if (/iphone|ipad|ipod/.test(ua)) {
+                return true;
+            }
+            return false;
+        }
+        function lookLinkUrl(url){
+            window.open(url);
+        }
+        function openMapModal(el,readonly){
+            // toggleBtns();
+            mapModalEl = el;
+            _U.mapMarkModal().openModal($(mapModalEl).data("locationData"),readonly);
+        }
+        function custom_user_init(data){
+            var logoObj = data.custom_logo;
+            if(logoObj && logoObj.user){
+                $("#user_nickName").text(logoObj.user);
+            }
+        }
+
+        function open_alert_init(data,settings){
+            return false;
+            if (data.openAlert.iconID!='0' && data.openAlert.imgPath) {
+                settings["events[skin_events].onloadcomplete"] += "show_open_alert('" + data.openAlert.imgPath + "');";
+            }
+        }
+        function shade_sky_floor_init(data,settings){
+            if (data.sky_land_shade.isWhole) {//全局遮罩
+                var useShade = data.sky_land_shade.useShade;
+                if (useShade) {
+                    var imgPath = data.sky_land_shade.shadeSetting.imgPath;
+                    var location = data.sky_land_shade.shadeSetting.location;
+                    if (location == 0) {
+                        location = -90;
+                    } else {
+                        location = 90;
+                    }
+                    settings["events[skin_events].onloadcomplete"] += "show_shade('" + imgPath + "'," + location + ",true);";
+                }
+            } else {//单场景遮罩
+                settings["events[skin_events].onloadcomplete"]+="js(getShade(get(xml.scene)));";
+            }
+        }
+        function getShade(sceneName) {
+            var imgUuid = sceneName.substring(sceneName.indexOf('_') + 1).toLowerCase();
+            var panoData = $("body").data("panoData");
+            var shadeSetting = panoData.sky_land_shade.shadeSetting;
+            if (shadeSetting) {
+                for(var i = 0;i < shadeSetting.length ; i++){
+                    var obj = shadeSetting[i];
+                    if(imgUuid == obj.imgUuid){
+                        var useShade = obj.useShade;
+                        if (useShade) {
+                            var imgPath = obj.imgPath;
+                            var location = obj.location;
+                            if (location == 0) {
+                                location = -90;
+                            } else {
+                                location = 90;
+                            }
+                            var krpano = document.getElementById('krpanoSWFObject');
+                            krpano.call("addShade('" + imgUuid + "','" + imgPath + "'," + location + ");");
+                        }
+                    }
+                }
+            }
+        }
+
+//讲解
+            function bgvoice_init(data,settings){
+                var speechObj = (undefined!=data.global_commentary&&data.global_commentary.mediaUrl)?data.global_commentary:null;
+                if(speechObj){
+                    settings["onstart"] += "playsound(bgspeech, '"+data.global_commentary.mediaUrl+"', 0);";
+                }else{
+                    if(undefined!=data.scene_commentary) {
+
+                        for(var scene_name in data.scene_commentary){
+                            var objOne = data.scene_commentary[scene_name];
+                            if (objOne.mediaUrl) {
+                                settings['scene[scene_'+objOne.sceneID+'].bgspeech'] = objOne.mediaUrl;
+                            }
+                        }
+                    }
+                }
+                settings["events[skin_events].onloadcomplete"]+="js(toggleSpeechBtn(get(xml.scene)));";
+            }
+            function toggleSpeechBtn(sceneName){
+                var panoData = $("body").data("panoData");
+                if(undefined!=panoData.global_commentary&&panoData.global_commentary.mediaUrl){
+                    $('.btn_music,.btn_music_off').show();
+                }else if(undefined!=panoData.scene_commentary&& undefined!=panoData.scene_commentary[sceneName] && panoData.scene_commentary[sceneName].mediaUrl){
+                    $('.btn_music,.btn_music_off').show();
+                }else{
+                    $('.btn_music,.btn_music_off').hide();
+                }
+            }
+            function pauseSpeech(el){
+                var krpano = document.getElementById('krpanoSWFObject');
+                krpano.call("pausesoundtoggle(bgspeech);pausesoundtoggle(bgs);");
+                if($(el).find('img').attr("src").indexOf("close") == -1){
+                $(el).find('img').attr("src","images/music-close.png");
+                }else{
+                    $(el).find('img').attr("src","images/music-open.png");
+                }
+            }
+            function toggleSpeech(el) {
+                if ($(el).hasClass("btn_music")) {
+                    $(el).removeClass("btn_music");
+                    $(el).addClass("btn_music_off");
+                } else {
+                    $(el).removeClass("btn_music_off");
+                    $(el).addClass("btn_music");
+                }
+            }
+       
+            function videoPh_open(src,img,type) {
+                var posterImg='';
+                if(img){
+                    posterImg = img;
+                }
+                $("#video_player_modal").modal('show');
+                $("#spotVideoBox").empty();
+                if(type==1){
+                    //=1为普通视频
+                     var videoStr = '<video class="spotVideo" preload="metadata" src="'+src+'" '
+                    +'controls="controls" poster="'+posterImg+'" autoplay="true"></video>'
+                    +'<a class="video_close" href="javascript:;" onClick="close_video_player()" >关闭</a>';
+                    $("#spotVideoBox").append(videoStr);
+                }else{
+                   //全景视频
+                    var sceneData = [
+                        {sceneId:"v2", sceneName:"高清", sceneFilePath:src, sceneType:"Video",isVideoPlay:true}
+                    ];
+                        //播放器初始化
+                        var params = {
+                            container:document.getElementById("spotVideoBox"),
+                            name: "SceneViewer",
+                            fullScreenMode:true,                  //全屏模式
+                            dragDirectionMode: true,
+                            dragMode: false,
+                            scenesArr: sceneData,
+                            errorCallBack: function (e) {
+                                //播放器不支持全景播放回调
+                                console.log("错误状态：" + e);
+                            }
+                        };
+                        initLoad(params);
+                         $("#spotVideoBox").append('<a class="video_close" href="javascript:;" onClick="close_video_player()" >关闭</a>');
+                }
+            }
+        </script>
+
+
+
+<script language="JavaScript" type="text/javascript" src="js/object.js"></script>
+<script type="text/javascript" src="js/alivideo.js"></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    var protocol = (("https:" == document.location.protocol) ? "https:" : "http:");
+    //判断是否为微信
+    function isWeiXin(){
+        var ua = window.navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    var shareData = {};
+
+    window.onload=function(){
+        shareData = {
+            'title':"",
+            'link':location.href,
+            'desc':'',
+            'imgUrl': protocol+"//pano.taagoo.com/normal/2016/09/23/157e40303922cc/thumb.jpg", // 分享图标
+            success: function () {
+                alert('分享成功');
+            },
+            cancel: function () {
+                alert('您取消了分享');
+            }
+        };
+
+        //是微信才会执行分享信息
+        if(isWeiXin()){
+            var oHead = document.getElementsByTagName('HEAD').item(0);
+            var oScript= document.createElement("script");
+            oScript.type = "text/javascript";
+            oScript.src="http://data.taagoo.com/weixin/js-share.html?url="+encodeURIComponent(shareData.link)+"&js_callback=weixinCallback";
+            oHead.appendChild( oScript);
+        }
+    }
+
+    //微信回调
+    function weixinCallback(obj){
+        wx.config(obj);
+        wx.ready(function() {
+            wx.onMenuShareTimeline(shareData);
+            wx.onMenuShareAppMessage(shareData);
+            wx.onMenuShareQQ(shareData);
+            wx.onMenuShareWeibo(shareData);
+        });
+        wx.error(function(res){
+            //alert("wx.error"+res.errMsg);
+        });
+    }
+
+</script>
+
+<script type="text/javascript">
+   (function(root,factory){
+        root.addImgPoint=factory();
+    })(this,function(){
+        var htl="",
+            filterData=localData["nav"+request.nav].daolanpoint;
+        var addImgPoints={
+            init:function(){
+                $("#daolan-box img").attr("src",localData["nav"+request.nav].daolanImg);
+                $(".introductionText").empty().append(localData["nav"+request.nav].introductionText);
+                $(".nameLine").empty().append('<b>景区名称：</b>'+localData["nav"+request.nav].name);
+                $(".callLine").empty().append('<b>服务热线：</b>'+localData["nav"+request.nav].callLine);
+                $(".call-btn").attr("href","tel:"+localData["nav"+request.nav].callLine);      
+                for(var i=0;i<filterData.length;i++){
+                    // if(i == 0) {
+                    //     htl+='<li class="active" data-sceneName="'+filterData[i].sceneName+'" style="left:'+filterData[i].left+';top:'+filterData[i].top+';" ></li>';
+                    // }else{
+                        htl+='<li data-sceneName="'+filterData[i].sceneName+'" style="left:'+filterData[i].left+';top:'+filterData[i].top+';" ></li>';;
+                    // }
+                }
+                $("#daolan-box ul").empty().append(htl);     
+                var userAgent = navigator.userAgent;
+                 var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 ;  
+                if(isIE) {
+                     $("#webvr").hide();
+                     this.hideClass="daolan-hide daolan-def";
+                } else{
+                    this.hideClass="daolan-hide";
+                }                                    
+                this.bind();
+            },
+            bind:function(){
+               var _this=this;
+                $("#nav-btn").on("click",function(){
+                   var box=$("#daolan-box");
+                   if(box.hasClass('daolan-hide')) {
+                        box.removeClass('daolan-hide daolan-def').addClass('daolan-show');
+                        var krpano = document.getElementById('krpanoSWFObject'),
+                            nowScene= krpano.get("xml.scene");
+                        $("#daolan-box ul").find('[data-scenename="'+nowScene+'"]').addClass('active');              
+                   }else{
+                        box.removeClass('daolan-show daolan-def').addClass(_this.hideClass);
+                   }
+                })
+                $("#call-modal,#jianjie,#weixin-modal").on('show.bs.modal',function(){
+                    var box=$("#daolan-box");
+                     box.removeClass('daolan-show').addClass('daolan-hide');
+                });
+                $("#daolan-box ul").on('click',"li",function(){
+                    var sceNow=$(this).data("scenename"),
+                        krpano = document.getElementById('krpanoSWFObject');
+                        if(sceNow === krpano.get("xml.scene")) {
+                            return;
+                        }else{
+                            $(this).addClass('active').siblings().removeClass('active');
+                            krpano.call("loadscene('"+sceNow+"')"); 
+                        }
+                })                  
+
+            }
+        }
+        return addImgPoints;
+    });    
+    $(function() {
+        
+
+        addImgPoint.init();
+       
+        
+    })
+  
+//      hu------------
+
+    function showWebVR(){
+        var krpano = document.getElementById('krpanoSWFObject');
+        var webvr = krpano.get("webvr");
+        webvr.entervr();
+    }
+
+    function rotateEx() {
+        var krpano = document.getElementById('krpanoSWFObject');
+        var now_value = krpano.get('autorotate.enabled');
+        now_value = !now_value;
+        krpano.call('set(autorotate.enabled,'+now_value+')');
+    }
+    function decidePano(){
+        if(window.location.href.indexOf("pano.html") !== -1) {
+           var krpano = document.getElementById('krpanoSWFObject');
+           // krpano.call("set(skin_settings.thumbs,true)");
+           krpano.call("set(layer[skin_layer].visible, true)");
+        }    
+    }
+    function changeScene(nowScene){
+        var krpano = document.getElementById('krpanoSWFObject'),
+            findSc=$("#daolan-box ul").find('[data-scenename="'+nowScene+'"]');
+        if(findSc.size() == 1) {
+            findSc.addClass('active').siblings().removeClass('active');
+        }else{
+            $("#daolan-box ul").find(".active").removeClass('active');
+        }
+    }
+
+</script>
+</body>
+</html>
